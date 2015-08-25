@@ -82,7 +82,12 @@
     .start))
 
 (defn battle [strategies-map]
+  (when (contains? strategies-map nil)
+    (throw (IllegalArgumentException. "Ninjas are not allowed.")))
+  (when (contains? strategies-map :wall)
+    (throw (IllegalArgumentException. "Chameleons are not allowed.")))
   (let [spawn-points (distinct (repeatedly (fn [] [(rand-int size)
                                                    (rand-int size)])))]
     (doseq [[[tag strategy] point] (map vector strategies-map spawn-points)]
       (biker-thread tag {:pos point} strategy))))
+
