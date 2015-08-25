@@ -69,18 +69,20 @@
   (doto (Thread.
           (fn []
             (swap! messages conj (str tag " joined"))
-            (loop [{pos :pos :as state} state]
-              (let [start-time (java.lang.System/currentTimeMillis)
-                    future-state (future (strategy state @arena))]
-                (when-let [{new-pos :pos :as new-state} (deref future-state turn-duration nil)]
-                  (when (and (valid-move? pos new-pos) (move! arena new-pos tag))
-                    (when-let [msg (:msg state)]
-                      (swap! messages conj (str tag " said " msg)))
-                    (java.lang.Thread/sleep 
-                      (- turn-duration (- (java.lang.System/currentTimeMillis) start-time)))
-                    (recur (dissoc new-state :msg))))))
-            (swap! messages conj (str "RIP " tag))
-            (swap! arena remove-trail tag)))
+            (try
+              (loop [{pos :pos :as state} state]
+                (let [start-time (java.lang.System/currentTimeMillis)
+                      future-state (future (strategy state @arena))]
+                  (when-let [{new-pos :pos :as new-state} (deref future-state turn-duration nil)]
+                    (when (and (valid-move? pos new-pos) (move! arena new-pos tag))
+                      (when-let [msg (:msg new-state)]
+                        (swap! messages conj (str tag " said " msg)))
+                      (java.lang.Thread/sleep 
+                        (- turn-duration (- (java.lang.System/currentTimeMillis) start-time)))
+                      (recur (dissoc new-state :msg))))))
+              (finally
+                (swap! messages conj (str "RIP " tag))
+                (swap! arena remove-trail tag)))))
     .start))
 
 (defn battle [strategies-map]
