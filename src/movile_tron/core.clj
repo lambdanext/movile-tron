@@ -78,7 +78,7 @@
                       (swap! messages conj (str tag " said " msg)))
                     (java.lang.Thread/sleep 
                       (- turn-duration (- (java.lang.System/currentTimeMillis) start-time)))
-                    (recur new-state)))))
+                    (recur (dissoc new-state :msg))))))
             (swap! messages conj (str "RIP " tag))
             (swap! arena remove-trail tag)))
     .start))
