@@ -27,7 +27,7 @@
 (defn setup []
   (q/color-mode :hsb)
   (q/smooth)
-  (q/frame-rate 10))
+  (q/frame-rate 20))
 
 (defn draw []
   (q/background 0)
@@ -74,6 +74,8 @@
                     future-state (future (strategy state @arena))]
                 (when-let [{new-pos :pos :as new-state} (deref future-state turn-duration nil)]
                   (when (and (valid-move? pos new-pos) (move! arena new-pos tag))
+                    (when-let [msg (:msg state)]
+                      (swap! messages conj (str tag " said " msg)))
                     (java.lang.Thread/sleep 
                       (- turn-duration (- (java.lang.System/currentTimeMillis) start-time)))
                     (recur new-state)))))
