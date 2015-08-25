@@ -4,8 +4,8 @@
   (:use [clojure.repl :only [pst]]))
 
 (def size "size of the square arena" 100)
-(def scale 7)
-(def turn-duration "time in ms between turns" 100)
+(def scale "size of a square in pixels" 7)
+(def turn-duration "time (in ms) between turns" 100)
 
 (defn square-arena [n]
   (let [n-1 (dec n)]
@@ -67,7 +67,8 @@
 
 (defn biker-thread [tag state strategy]
   (doto (Thread.
-          (fn [] 
+          (fn []
+            (swap! messages conj (str tag " joined"))
             (loop [{pos :pos :as state} state]
               (let [start-time (java.lang.System/currentTimeMillis)
                     future-state (future (strategy state @arena))]
