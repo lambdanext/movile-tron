@@ -6,7 +6,7 @@
     [clojure.java.io :as io])
   (:use [clojure.repl :only [pst]]))
 
-(def size "size of the square arena" 50)
+(def size "size of the square arena" 100)
 (def scale "size of a square in pixels" 7)
 (def turn-duration "time (in ms) between turns" 300)
 

@@ -16,6 +16,19 @@ A Tron game waiting for your bots
                       :flag (not flag)})})
 ```
 
+or in client mode:
+```clojure
+(use '[movile-tron.client :only [biker-client]])
+
+(biker-client
+  :buzz (fn [{[x y] :pos} _]
+          {:pos [(inc x) y]})
+  "http://server:8080/")
+```
+
+
+
+
 ## License
 
 Copyright © 2015 λ→
