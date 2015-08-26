@@ -23,8 +23,10 @@ or in client mode:
 (biker-client
   :buzz (fn [{[x y] :pos} _]
           {:pos [(inc x) y]})
-  "http://server:8080/")
+  "http://10.125.128.37:8080/")
 ```
+
+Obviously this server is just valid for the workshop and you have to be on the TRYP CAMPINAS network.
 
 
 
