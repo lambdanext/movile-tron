@@ -21,9 +21,6 @@
 
 (def messages (atom []))
 
-(defn blank-arena! []
-  (reset! arena (square-arena size)))
-
 (defn setup []
   (q/color-mode :hsb)
   (q/smooth)
