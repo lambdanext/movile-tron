@@ -5,15 +5,17 @@
 ;; a biker strategy is a function of state * arena -> state 
 
 (defn post [url data]
-  (:body (client/post url {:form-params data :content-type :edn :as :clojure})))
+  (let [answer (client/post url
+                 {:form-params data 
+                  :content-type :edn 
+                  :as :clojure
+                  :follow-redirects true})
+        url (or (peek (:trace-redirects answer)) url)]
+    (when-let [body (:body answer)] (assoc body :url url))))
 
 (defn biker-client [tag strategy server-url]
-  (let [answer (post server-url {:tag tag})
-        biker-url (:url answer)]
-    (loop [arena (:arena answer) state {:pos (:pos answer)}]
-      (let [new-state (strategy state arena)
-            new-arena (post biker-url (select-keys new-state [:pos :msg]))]
-        (when new-arena (recur new-arena (dissoc new-state :msg)))))))
-
-
-
+  (let [{:keys [arena pos url]} (post server-url {:tag tag})]
+    (loop [arena arena state {:pos pos} url url]
+      (let [new-state (strategy state arena)]
+        (when-let [{:keys [arena url]} (post url (select-keys new-state [:pos :msg]))]
+          (recur arena (dissoc new-state :msg) url))))))
