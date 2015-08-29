@@ -48,9 +48,7 @@
                   (constantly
                     (http/start-server
                       handler {:port 8080})))
-  (log/info "Done")
-  ; o.O)
-  (Thread/sleep Long/MAX_VALUE))
+  (log/info "Done"))
 
 ; FIXME: At the moment there is no way to call as from the repl.
 (defn stop-server!
