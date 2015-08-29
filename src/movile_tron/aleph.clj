@@ -50,6 +50,10 @@
                       handler {:port 8080})))
   (log/info "Done"))
 
+(defn -main
+  [& _]
+  (start-server!))
+
 ; FIXME: At the moment there is no way to call as from the repl.
 (defn stop-server!
   []
